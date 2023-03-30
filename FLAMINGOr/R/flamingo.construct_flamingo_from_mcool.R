@@ -16,7 +16,7 @@ flamingo.construct_flamingo_from_mcool <- function(mcool_file,normalization,reso
   parent_dir = all_dir[1,2]
   target_dir = paste(c("",parent_dir,resolution),collapse='/')
   mcool_dat = rhdf5::h5read(mcool_file,target_dir)
-  available_normalization = setdiff(names(mcool_dat$bins),c('chrom','start','end','weight'))
+  available_normalization = setdiff(names(mcool_dat$bins),c('chrom','start','end'))
   if(!normalization %in% available_normalization){
     stop(
       paste('Normalization method not exist in the .mcool data! Must be one of: ',paste(available_normalization,collapse=', '))
@@ -37,7 +37,7 @@ flamingo.construct_flamingo_from_mcool <- function(mcool_file,normalization,reso
   for(i in 1:(dim(csr_rawcount)[1])){
     csr_rawcount[i,3] <- csr_rawcount[i,3]/(normalization_file[csr_rawcount[i,1]]*normalization_file[csr_rawcount[i,2]])
   }
-  input_if <- Matrix::sparseMatrix(i=csr_rawcount[,1],j=csr_rawcount[,2],x=csr_rawcount[,3],dims=c(n,n))
+  input_if <- Matrix::sparseMatrix(i=csr_rawcount[,1],j=csr_rawcount[,2],x=csr_rawcount[,3])
   if(n<n_row){
     input_if <- as.matrix(input_if)
   }else{
